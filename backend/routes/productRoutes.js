@@ -215,7 +215,7 @@ router.get("/", async (req, res) => {
 
 router.get("/best-seller",async (req,res)=>{
   try{
-    const bestSeller = await Product.findOne().sort({rating: -1});4
+    const bestSeller = await Product.findOne().sort({rating: -1});
     if(bestSeller){
       res.json(bestSeller);
     }else{
@@ -238,43 +238,42 @@ router.get("/new-arrivals",async(req,res)=>{
   }
 })
 
-
-router.get("/:id", async(req,res)=>{
-  try{
-    const product = await Product.findById(req.params.id);
-    if(product){
-      res.json(product);
-    } else {
-      res.status(404).json({meassage: "Product Not found"})
-    }
-  }catch(err){
-    console.error(err);
-    res.status(500).send("Server Error");
-
-  }
-});
-
-router.get("/similar/:id", async(req, res)=>{
-  const {id} = req.params;
-  try{
+router.get("/similar/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
     const product = await Product.findById(id);
 
-    if(!product){
-      return res.status(404).json({message: "Product not found"})
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
     }
 
     const similarProducts = await Product.find({
-      _id: {$ne: id},
+      _id: { $ne: id },
       gender: product.gender,
       category: product.category,
-    }).limit(4)
+    }).limit(4);
 
-    res.json(similarProducts)
-  }catch(err){
-    console.log(err);
-    res.status(500).send("server Error")
+    res.json(similarProducts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
   }
-})
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: "Product Not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
 
 
 
